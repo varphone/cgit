@@ -1071,6 +1071,14 @@ int cmd_main(int argc, const char **argv)
 	if (!ctx.cfg.virtual_root && ctx.cfg.script_name)
 		ctx.cfg.virtual_root = ensure_end(ctx.cfg.script_name, '/');
 
+	/* Supports to dynamic base path */
+	path = getenv("BASE_PATH");
+	if (path) {
+		if (ctx.cfg.virtual_root)
+			free(ctx.cfg.virtual_root);
+		ctx.cfg.virtual_root = ensure_end(path, '/');
+	}
+
 	/* If no url parameter is specified on the querystring, lets
 	 * use PATH_INFO as url. This allows cgit to work with virtual
 	 * urls without the need for rewriterules in the webserver (as
