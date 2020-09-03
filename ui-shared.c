@@ -741,6 +741,8 @@ void cgit_print_http_headers(void)
 	}
 	if (!ctx.env.authenticated)
 		html("Cache-Control: no-cache, no-store\n");
+	if (ctx.page.status == 401)
+		html("WWW-Authenticate: Basic realm=\"Access to cgit\"\n");
 	htmlf("Last-Modified: %s\n", http_date(ctx.page.modified));
 	htmlf("Expires: %s\n", http_date(ctx.page.expires));
 	if (ctx.page.etag)
