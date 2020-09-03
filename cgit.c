@@ -711,6 +711,11 @@ static void process_request(void)
 	 * display the authentication body from the auth_filter. This should
 	 * never be cached. */
 	if (!ctx.env.authenticated) {
+		if (ctx.qry.repo && strcmp(ctx.qry.repo, "")) {
+			ctx.page.title = "cgit error";
+			cgit_print_error_page(401, "Unauthorized", "Unauthorized");
+			return;
+		}
 		ctx.page.title = "Authentication Required";
 		cgit_print_http_headers();
 		cgit_print_docstart();
