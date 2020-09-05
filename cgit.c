@@ -1115,8 +1115,13 @@ int cmd_main(int argc, const char **argv)
 		ctx.page.expires += ttl * 60;
 	if (!ctx.env.authenticated || (ctx.env.request_method && !strcmp(ctx.env.request_method, "HEAD")))
 		ctx.cfg.cache_size = 0;
+	char key[1024];
+	snprintf(key, sizeof(key), "%s%s",
+		 ctx.cfg.virtual_root ? ctx.cfg.virtual_root : "",
+		 ctx.qry.raw ? ctx.qry.raw : "");
+	key[sizeof(key) - 1] = 0;
 	err = cache_process(ctx.cfg.cache_size, ctx.cfg.cache_root,
-			    ctx.qry.raw, ttl, process_request);
+			    key, ttl, process_request);
 	cgit_cleanup_filters();
 	if (err)
 		cgit_print_error("Error processing page: %s (%d)",
